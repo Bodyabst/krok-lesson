@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Урок: Кардіологія</title>
+    <title>Урок: Процесинг РНК</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         body {
@@ -21,6 +21,7 @@
             border-radius: 12px;
             overflow: hidden;
             margin-bottom: 20px;
+            background-color: #000;
         }
         .video-container iframe {
             position: absolute;
@@ -35,141 +36,128 @@
             margin-bottom: 20px;
             box-shadow: 0 2px 5px rgba(0,0,0,0.05);
         }
-        
-        /* Обгортка для кожної кнопки і її особистого пояснення */
-        .option-wrapper {
-            margin-bottom: 10px;
-        }
-
-        /* Кнопки відповідей */
+        .option-wrapper { margin-bottom: 10px; }
         .option-btn {
             display: block;
             width: 100%;
-            padding: 12px;
+            padding: 14px;
             background-color: var(--tg-theme-button-color, #3390ec);
             color: var(--tg-theme-button-text-color, #ffffff);
             border: none;
             border-radius: 8px;
-            font-size: 16px;
+            font-size: 15px;
             cursor: pointer;
             text-align: left;
-            transition: background-color 0.2s;
+            font-weight: 500;
         }
-
-        /* Блоки пояснень (сховані за замовчуванням) */
         .explanation {
             display: none;
-            margin-bottom: 8px; /* Відступ від пояснення вниз до кнопки */
-            padding: 10px;
+            margin-bottom: 8px;
+            padding: 12px;
             border-radius: 6px;
             font-size: 14px;
             animation: fadeIn 0.2s ease-in-out;
         }
-        .wrong-expl {
-            background-color: #ffebee;
-            color: #c62828;
-            border-left: 4px solid #f44336;
-        }
-        .correct-expl {
-            background-color: #e8f5e9;
-            color: #2e7d32;
-            border-left: 4px solid #4caf50;
-        }
-
-        /* Анімація плавної появи */
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(5px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+        .wrong-expl { background-color: #ffebee; color: #c62828; border-left: 4px solid #f44336; }
+        .correct-expl { background-color: #e8f5e9; color: #2e7d32; border-left: 4px solid #4caf50; }
+        
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
 
         .finish-btn {
             display: none; 
             width: 100%;
-            padding: 15px;
-            margin-top: 10px;
+            padding: 16px;
             background-color: #4caf50;
             color: white;
             border: none;
             border-radius: 8px;
             font-size: 16px;
             font-weight: bold;
-            cursor: pointer;
+            margin-top: 20px;
         }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 14px; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: rgba(51, 144, 236, 0.1); }
     </style>
 </head>
 <body>
 
-    <h2>Крок 1: Кардіологія 🫀</h2>
+    <h2>🧬 Процесинг РНК</h2>
 
     <div class="video-container">
-        <iframe src="https://www.youtube.com/embed/Ny3uzxYABUg?si=KtC8EAUcqrYvZYIr" allowfullscreen></iframe>
+        <iframe src="https://iframe.mediadelivery.net/embed/YOUR_ID/YOUR_VIDEO_ID" loading="lazy" allowfullscreen="true"></iframe>
     </div>
 
     <div class="card-box">
-        <h3 style="margin-top: 0;">📌 High-Yield:</h3>
-        <ul style="padding-left: 20px; margin-bottom: 0;">
-            <li><b>Інфаркт міокарда:</b> найчастіше вражає передню стінку лівого шлуночка (ПМШГ).</li>
-            <li><b>ЕКГ ознаки:</b> елевація сегмента ST (гостра стадія), патологічний зубець Q.</li>
-            <li><b>Маркери крові:</b> Тропонін I та T — 'золотий стандарт'.</li>
-        </ul>
+        <h3 style="margin-top: 0;">📌 High-Yield Конспект</h3>
+        <p><b>Процесинг</b> — це перетворення пре-мРНК на зрілу мРНК у ядрі.</p>
+        <table>
+            <tr><th>Етап</th><th>Що відбувається?</th></tr>
+            <tr><td><b>Кепування</b></td><td>Додавання 7-метилгуанозину до 5'-кінця.</td></tr>
+            <tr><td><b>Сплайсинг</b></td><td>Вирізання <b>інтронів</b>, зшивання <b>екзонів</b>.</td></tr>
+            <tr><td><b>Поліаденілювання</b></td><td>Додавання Poly-A хвоста до 3'-кінця.</td></tr>
+        </table>
+        <p style="margin-top: 10px; font-size: 13px; color: #666;">⚠️ <b>Крок-маркер:</b> Антитіла до білків сплайсосоми (Anti-Smith) = Системний червоний вовчак (СЧВ).</p>
     </div>
 
-    <div class="card-box">
-        <h3 style="margin-top: 0;">🧠 Bites: Перевірка</h3>
-        <p>Який маркер некрозу міокарда є найбільш специфічним і залишається підвищеним найдовше (до 10-14 днів) після гострого інфаркту?</p>
-        
-        <div class="option-wrapper">
-            <div class="explanation wrong-expl" id="expl-1">❌ <b>АСТ</b> не є специфічним для серця (міститься також у печінці та м'язах).</div>
-            <button class="option-btn" id="btn-1" onclick="toggleAnswer(1, false)">АСТ</button>
+    <div id="quiz-container">
+        <div class="card-box">
+            <p><b>1. Як називається процес видалення некодуючих ділянок (інтронів)?</b></p>
+            <div class="option-wrapper">
+                <div class="explanation wrong-expl" id="expl-1-1">❌ Транскрипція — це лише синтез РНК на матриці ДНК.</div>
+                <button class="option-btn" id="btn-1-1" onclick="toggleAnswer('1-1', false, 1)">Транскрипція</button>
+            </div>
+            <div class="option-wrapper">
+                <div class="explanation correct-expl" id="expl-1-2">✅ <b>Сплайсинг</b> — саме цей процес робить РНК "зрілою", видаляючи зайве.</div>
+                <button class="option-btn" id="btn-1-2" onclick="toggleAnswer('1-2', true, 1)">Сплайсинг</button>
+            </div>
         </div>
 
-        <div class="option-wrapper">
-            <div class="explanation correct-expl" id="expl-2">✅ <b>Правильно! Це Тропонін I.</b><br>Він високоспецифічний і тримається до 2 тижнів.</div>
-            <button class="option-btn" id="btn-2" onclick="toggleAnswer(2, true)">Тропонін I</button>
+        <div class="card-box">
+            <p><b>2. Пацієнт зі СЧВ має антитіла до snRNP. Який процес порушено?</b></p>
+            <div class="option-wrapper">
+                <div class="explanation correct-expl" id="expl-2-1">✅ <b>Сплайсинг.</b> snRNP утворюють сплайсосому, яка вирізає інтрони.</div>
+                <button class="option-btn" id="btn-2-1" onclick="toggleAnswer('2-1', true, 2)">Сплайсинг пре-мРНК</button>
+            </div>
+            <div class="option-wrapper">
+                <div class="explanation wrong-expl" id="expl-2-2">❌ Трансляція відбувається в цитоплазмі, snRNP там не працюють.</div>
+                <button class="option-btn" id="btn-2-2" onclick="toggleAnswer('2-2', false, 2)">Трансляція</button>
+            </div>
         </div>
 
-        <div class="option-wrapper">
-            <div class="explanation wrong-expl" id="expl-3">❌ <b>КФК-МВ</b> специфічна, але повертається до норми через 2-3 дні. Її використовують для діагностики повторного інфаркту.</div>
-            <button class="option-btn" id="btn-3" onclick="toggleAnswer(3, false)">КФК-МВ</button>
         </div>
 
-        <div class="option-wrapper">
-            <div class="explanation wrong-expl" id="expl-4">❌ <b>Міоглобін</b> зростає найпершим, але він не специфічний для серця і дуже швидко зникає.</div>
-            <button class="option-btn" id="btn-4" onclick="toggleAnswer(4, false)">Міоглобін</button>
-        </div>
-    </div>
-
-    <button id="finish-btn" class="finish-btn" onclick="finishLesson()">Завершити урок та закрити</button>
+    <button id="finish-btn" class="finish-btn" onclick="finishLesson()">Завершити урок ✅</button>
 
     <script>
         Telegram.WebApp.expand();
+        let solvedQuestions = new Set();
+        const totalQuestions = 2; // Зміни на 10, коли додаси всі
 
-        function toggleAnswer(id, isCorrect) {
+        function toggleAnswer(id, isCorrect, qNum) {
             let explBox = document.getElementById('expl-' + id);
             let btn = document.getElementById('btn-' + id);
 
-            // 1. Якщо ми клікнули на кнопку, яка ВЖЕ відкрита — просто ховаємо її пояснення
-            // і повертаємо кнопці звичайний синій колір.
             if (explBox.style.display === 'block') {
                 explBox.style.display = 'none';
                 btn.style.backgroundColor = 'var(--tg-theme-button-color, #3390ec)';
-                return; // Зупиняємо виконання подальшого коду
+                return;
             }
 
-            // 2. Якщо клікнули на нову кнопку: спершу автоматично ховаємо всі інші відкриті пояснення,
-            // щоб екран не розтягувався до безкінечності (дуже зручно для мобільних).
-            document.querySelectorAll('.explanation').forEach(el => el.style.display = 'none');
-            document.querySelectorAll('.option-btn').forEach(el => el.style.backgroundColor = 'var(--tg-theme-button-color, #3390ec)');
+            // Ховаємо пояснення лише для ЦЬОГО питання
+            document.querySelectorAll(`[id^="expl-${qNum}-"]`).forEach(el => el.style.display = 'none');
+            document.querySelectorAll(`[id^="btn-${qNum}-"]`).forEach(el => el.style.backgroundColor = 'var(--tg-theme-button-color, #3390ec)');
 
-            // 3. Показуємо пояснення САМЕ НАД тією кнопкою, яку щойно натиснули
             explBox.style.display = 'block';
-
-            // 4. Фарбуємо натиснуту кнопку у відповідний колір
             if (isCorrect) {
-                btn.style.backgroundColor = '#4caf50'; // Зелений
-                document.getElementById('finish-btn').style.display = 'block'; // Відкриваємо фінал
+                btn.style.backgroundColor = '#4caf50';
+                solvedQuestions.add(qNum);
             } else {
-                btn.style.backgroundColor = '#f44336'; // Червоний
+                btn.style.backgroundColor = '#f44336';
+            }
+
+            if (solvedQuestions.size === totalQuestions) {
+                document.getElementById('finish-btn').style.display = 'block';
             }
         }
 
