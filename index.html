@@ -14,7 +14,6 @@
             padding: 16px;
             line-height: 1.5;
         }
-        /* Плеєр */
         .video-container {
             position: relative;
             padding-bottom: 56.25%;
@@ -29,7 +28,6 @@
             width: 100%; height: 100%;
             border: none;
         }
-        /* Блоки для тексту і тестів */
         .card-box {
             background-color: var(--tg-theme-secondary-bg-color, #ffffff);
             padding: 16px;
@@ -37,12 +35,17 @@
             margin-bottom: 20px;
             box-shadow: 0 2px 5px rgba(0,0,0,0.05);
         }
+        
+        /* Обгортка для кожної кнопки і її особистого пояснення */
+        .option-wrapper {
+            margin-bottom: 10px;
+        }
+
         /* Кнопки відповідей */
         .option-btn {
             display: block;
             width: 100%;
             padding: 12px;
-            margin-bottom: 10px;
             background-color: var(--tg-theme-button-color, #3390ec);
             color: var(--tg-theme-button-text-color, #ffffff);
             border: none;
@@ -50,25 +53,40 @@
             font-size: 16px;
             cursor: pointer;
             text-align: left;
+            transition: background-color 0.2s;
         }
-        .option-btn:disabled { opacity: 0.8; cursor: not-allowed; }
-        .correct { background-color: #4caf50 !important; }
-        .wrong { background-color: #f44336 !important; }
-        
-        /* Блок пояснення */
+
+        /* Блоки пояснень (сховані за замовчуванням) */
         .explanation {
             display: none;
-            margin-top: 15px;
-            padding: 12px;
-            border-left: 4px solid #3390ec;
-            border-radius: 4px;
+            margin-bottom: 8px; /* Відступ від пояснення вниз до кнопки */
+            padding: 10px;
+            border-radius: 6px;
             font-size: 14px;
+            animation: fadeIn 0.2s ease-in-out;
         }
-        /* Фінальна кнопка (спочатку схована) */
+        .wrong-expl {
+            background-color: #ffebee;
+            color: #c62828;
+            border-left: 4px solid #f44336;
+        }
+        .correct-expl {
+            background-color: #e8f5e9;
+            color: #2e7d32;
+            border-left: 4px solid #4caf50;
+        }
+
+        /* Анімація плавної появи */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
         .finish-btn {
             display: none; 
             width: 100%;
             padding: 15px;
+            margin-top: 10px;
             background-color: #4caf50;
             color: white;
             border: none;
@@ -92,7 +110,7 @@
         <ul style="padding-left: 20px; margin-bottom: 0;">
             <li><b>Інфаркт міокарда:</b> найчастіше вражає передню стінку лівого шлуночка (ПМШГ).</li>
             <li><b>ЕКГ ознаки:</b> елевація сегмента ST (гостра стадія), патологічний зубець Q.</li>
-            <li><b>Маркери крові:</b> Тропонін I та T — 'золотий стандарт' діагностики.</li>
+            <li><b>Маркери крові:</b> Тропонін I та T — 'золотий стандарт'.</li>
         </ul>
     </div>
 
@@ -100,14 +118,25 @@
         <h3 style="margin-top: 0;">🧠 Bites: Перевірка</h3>
         <p>Який маркер некрозу міокарда є найбільш специфічним і залишається підвищеним найдовше (до 10-14 днів) після гострого інфаркту?</p>
         
-        <div>
-            <button class="option-btn" onclick="checkAnswer(this, false)">АСТ</button>
-            <button class="option-btn" onclick="checkAnswer(this, true)">Тропонін I</button>
-            <button class="option-btn" onclick="checkAnswer(this, false)">КФК-МВ</button>
-            <button class="option-btn" onclick="checkAnswer(this, false)">Міоглобін</button>
+        <div class="option-wrapper">
+            <div class="explanation wrong-expl" id="expl-1">❌ <b>АСТ</b> не є специфічним для серця (міститься також у печінці та м'язах).</div>
+            <button class="option-btn" id="btn-1" onclick="toggleAnswer(1, false)">АСТ</button>
         </div>
 
-        <div id="explanation" class="explanation"></div>
+        <div class="option-wrapper">
+            <div class="explanation correct-expl" id="expl-2">✅ <b>Правильно! Це Тропонін I.</b><br>Він високоспецифічний і тримається до 2 тижнів.</div>
+            <button class="option-btn" id="btn-2" onclick="toggleAnswer(2, true)">Тропонін I</button>
+        </div>
+
+        <div class="option-wrapper">
+            <div class="explanation wrong-expl" id="expl-3">❌ <b>КФК-МВ</b> специфічна, але повертається до норми через 2-3 дні. Її використовують для діагностики повторного інфаркту.</div>
+            <button class="option-btn" id="btn-3" onclick="toggleAnswer(3, false)">КФК-МВ</button>
+        </div>
+
+        <div class="option-wrapper">
+            <div class="explanation wrong-expl" id="expl-4">❌ <b>Міоглобін</b> зростає найпершим, але він не специфічний для серця і дуже швидко зникає.</div>
+            <button class="option-btn" id="btn-4" onclick="toggleAnswer(4, false)">Міоглобін</button>
+        </div>
     </div>
 
     <button id="finish-btn" class="finish-btn" onclick="finishLesson()">Завершити урок та закрити</button>
@@ -115,36 +144,33 @@
     <script>
         Telegram.WebApp.expand();
 
-        function checkAnswer(buttonElement, isCorrect) {
-            // 1. Блокуємо всі кнопки, щоб учень не клацав двічі
-            let allButtons = document.querySelectorAll('.option-btn');
-            allButtons.forEach(btn => btn.disabled = true);
+        function toggleAnswer(id, isCorrect) {
+            let explBox = document.getElementById('expl-' + id);
+            let btn = document.getElementById('btn-' + id);
 
-            // 2. Знаходимо блок пояснення
-            let explBox = document.getElementById('explanation');
-            explBox.style.display = 'block';
-
-            if (isCorrect) {
-                // Якщо правильно
-                buttonElement.classList.add('correct');
-                explBox.style.borderLeftColor = "#4caf50";
-                explBox.style.backgroundColor = "#e8f5e9";
-                explBox.style.color = "#2e7d32";
-                explBox.innerHTML = "✅ <b>Правильно! Це Тропонін I.</b><br><br><b>Пояснення:</b> Тропоніни високоспецифічні для серцевого м'яза і зберігаються в крові до 2 тижнів. <i>КФК-МВ</i> повертається до норми через 2-3 дні, тому її краще використовувати для діагностики <b>повторного</b> інфаркту.";
-            } else {
-                // Якщо неправильно
-                buttonElement.classList.add('wrong');
-                explBox.style.borderLeftColor = "#f44336";
-                explBox.style.backgroundColor = "#ffebee";
-                explBox.style.color = "#c62828";
-                explBox.innerHTML = "❌ <b>Не зовсім.</b><br><br><i>Міоглобін</i> зростає найпершим, але він не специфічний. <i>КФК-МВ</i> швидко падає. А от 'золотим стандартом', який тримається довго, є Тропонін.";
-                
-                // Підсвічуємо правильну відповідь (вона друга в списку, індекс 1)
-                allButtons[1].classList.add('correct'); 
+            // 1. Якщо ми клікнули на кнопку, яка ВЖЕ відкрита — просто ховаємо її пояснення
+            // і повертаємо кнопці звичайний синій колір.
+            if (explBox.style.display === 'block') {
+                explBox.style.display = 'none';
+                btn.style.backgroundColor = 'var(--tg-theme-button-color, #3390ec)';
+                return; // Зупиняємо виконання подальшого коду
             }
 
-            // 3. Показуємо кнопку завершення уроку
-            document.getElementById('finish-btn').style.display = 'block';
+            // 2. Якщо клікнули на нову кнопку: спершу автоматично ховаємо всі інші відкриті пояснення,
+            // щоб екран не розтягувався до безкінечності (дуже зручно для мобільних).
+            document.querySelectorAll('.explanation').forEach(el => el.style.display = 'none');
+            document.querySelectorAll('.option-btn').forEach(el => el.style.backgroundColor = 'var(--tg-theme-button-color, #3390ec)');
+
+            // 3. Показуємо пояснення САМЕ НАД тією кнопкою, яку щойно натиснули
+            explBox.style.display = 'block';
+
+            // 4. Фарбуємо натиснуту кнопку у відповідний колір
+            if (isCorrect) {
+                btn.style.backgroundColor = '#4caf50'; // Зелений
+                document.getElementById('finish-btn').style.display = 'block'; // Відкриваємо фінал
+            } else {
+                btn.style.backgroundColor = '#f44336'; // Червоний
+            }
         }
 
         function finishLesson() {
