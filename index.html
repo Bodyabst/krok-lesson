@@ -5,172 +5,120 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Урок: Процесинг РНК</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
-  
-      <style>
-    body {
-        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-        background-color: var(--tg-theme-bg-color, #f4f4f5);
-        color: var(--tg-theme-text-color, #000000);
-        margin: 0;
-        padding: 16px;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-    }
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: var(--tg-theme-bg-color, #f4f4f5);
+            color: var(--tg-theme-text-color, #000000);
+            margin: 0; padding: 16px; display: flex; flex-direction: column; align-items: center;
+        }
+        .content-wrapper { width: 100%; max-width: 600px; }
+        
+        /* Контейнер для відео від Bunny */
+        .video-outer-container {
+            border-radius: 12px; overflow: hidden; margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2); background-color: #000;
+        }
 
-    .content-wrapper {
-        width: 100%;
-        max-width: 600px;
-    }
+        .card-box {
+            background-color: var(--tg-theme-secondary-bg-color, #ffffff);
+            padding: 16px; border-radius: 12px; margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05); width: 100%; box-sizing: border-box;
+        }
+        
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 14px; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: rgba(51, 144, 236, 0.1); }
 
-    /* Цей блок робить магію з розміром */
-    .video-container {
-        width: 100%;
-        aspect-ratio: 16 / 9; /* Жорстко фіксуємо пропорції відео */
-        background-color: #000;
-        border-radius: 12px;
-        overflow: hidden;
-        margin-bottom: 20px;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-        position: relative;
-    }
+        .option-wrapper { margin-bottom: 10px; width: 100%; }
+        .option-btn {
+            display: block; width: 100%; padding: 14px;
+            background-color: var(--tg-theme-button-color, #3390ec);
+            color: var(--tg-theme-button-text-color, #ffffff);
+            border: none; border-radius: 8px; font-size: 15px;
+            cursor: pointer; text-align: left; font-weight: 500;
+        }
+        .explanation { display: none; margin-bottom: 8px; padding: 12px; border-radius: 6px; font-size: 14px; }
+        .wrong-expl { background-color: #ffebee; color: #c62828; border-left: 4px solid #f44336; }
+        .correct-expl { background-color: #e8f5e9; color: #2e7d32; border-left: 4px solid #4caf50; }
 
-    .video-container iframe {
-        width: 100%;
-        height: 100%;
-        border: none;
-        display: block;
-    }
-
-    .card-box {
-        background-color: var(--tg-theme-secondary-bg-color, #ffffff);
-        padding: 16px;
-        border-radius: 12px;
-        margin-bottom: 20px;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-        width: 100%;
-        box-sizing: border-box;
-    }
-
-    /* Стилі для таблиці конспекту */
-    table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 14px; }
-    th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
-    th { background-color: rgba(51, 144, 236, 0.1); }
-
-    /* Кнопки тестів */
-    .option-wrapper { margin-bottom: 10px; width: 100%; }
-    .option-btn {
-        display: block; width: 100%; padding: 14px;
-        background-color: var(--tg-theme-button-color, #3390ec);
-        color: var(--tg-theme-button-text-color, #ffffff);
-        border: none; border-radius: 8px; font-size: 15px;
-        cursor: pointer; text-align: left; font-weight: 500;
-    }
-
-    .explanation {
-        display: none; margin-bottom: 8px; padding: 12px;
-        border-radius: 6px; font-size: 14px;
-    }
-    .wrong-expl { background-color: #ffebee; color: #c62828; border-left: 4px solid #f44336; }
-    .correct-expl { background-color: #e8f5e9; color: #2e7d32; border-left: 4px solid #4caf50; }
-
-    .finish-btn {
-        display: none; width: 100%; padding: 18px;
-        background-color: #4caf50; color: white; border: none;
-        border-radius: 8px; font-size: 16px; font-weight: bold; margin-top: 10px;
-    }
-
+        .finish-btn {
+            display: none; width: 100%; padding: 18px;
+            background-color: #4caf50; color: white; border: none;
+            border-radius: 8px; font-size: 16px; font-weight: bold; margin-top: 10px;
+        }
     </style>
 </head>
 <body>
+    <div class="content-wrapper">
+        <h2>🧬 Процесинг РНК</h2>
 
-    <h2>🧬 Процесинг РНК</h2>
+        <div class="video-outer-container">
+            <div style="position:relative;padding-top:56.25%;">
+                <iframe src="https://iframe.mediadelivery.net/embed/611262/acdb6b3f-0d4e-4253-8806-f3c2a2417eae?autoplay=false&loop=false&muted=false&preload=true&responsive=true" 
+                        loading="lazy" 
+                        style="border:0;position:absolute;top:0;height:100%;width:100%;" 
+                        allow="accelerometer;gyroscope;autoplay;encrypted-media;picture-in-picture;" 
+                        allowfullscreen="true">
+                </iframe>
+            </div>
+        </div>
 
-    <div class="video-container">
-        <iframe src="https://iframe.mediadelivery.net/play/611262/acdb6b3f-0d4e-4253-8806-f3c2a2417eae?autoplay=false&preload=true" 
-                loading="lazy" allow="accelerometer;gyroscope;autoplay;encrypted-media;picture-in-picture;" allowfullscreen="true">
-        </iframe>
+        <div class="card-box">
+            <h3 style="margin-top: 0;">📌 High-Yield Конспект</h3>
+            <p>Процесинг (дозрівання) мРНК відбувається в <b>ядрі</b>.</p>
+            <table>
+                <tr><th>Процес</th><th>Локалізація</th></tr>
+                <tr><td>Кепування</td><td>5'-кінець</td></tr>
+                <tr><td>Сплайсинг</td><td>Вирізання інтронів</td></tr>
+                <tr><td>Полі-А</td><td>3'-кінець</td></tr>
+            </table>
+        </div>
+
+        <div id="quiz-container">
+            <div class="card-box">
+                <p><b>1. Який процес передбачає видалення інтронів та зшивання екзонів?</b></p>
+                <div class="option-wrapper">
+                    <div class="explanation wrong-expl" id="expl-1-1">❌ Ні, це синтез РНК на матриці ДНК.</div>
+                    <button class="option-btn" id="btn-1-1" onclick="toggleAnswer('1-1', false, 1)">Транскрипція</button>
+                </div>
+                <div class="option-wrapper">
+                    <div class="explanation correct-expl" id="expl-1-2">✅ Правильно! Сплайсинг робить РНК зрілою.</div>
+                    <button class="option-btn" id="btn-1-2" onclick="toggleAnswer('1-2', true, 1)">Сплайсинг</button>
+                </div>
+            </div>
+            </div>
+
+        <button id="finish-btn" class="finish-btn" onclick="finishLesson()">Завершити урок ✅</button>
     </div>
-
-    <div class="card-box">
-        <h3 style="margin-top: 0;">📌 High-Yield Конспект</h3>
-        <table>
-            <tr><th>Етап</th><th>Суть процесу</th></tr>
-            <tr><td><b>Кепування</b></td><td>5'-кінець: 7-метилгуанозин (захист + старт трансляції).</td></tr>
-            <tr><td><b>Сплайсинг</b></td><td>Вирізання <b>інтронів</b> (сміття), зшивання <b>екзонів</b>.</td></tr>
-            <tr><td><b>Полі-А</b></td><td>3'-кінець: Poly-A хвіст (стабільність + вихід з ядра).</td></tr>
-        </table>
-        <p style="margin-top: 10px; font-size: 13px; color: #e67e22;"><b>Крок-маркер:</b> Антитіла до snRNP (Anti-Smith) = Системний червоний вовчак.</p>
-    </div>
-
-    <div id="quiz-container">
-        <div class="card-box">
-            <p><b>1. Як називається видалення некодуючих ділянок (інтронів)?</b></p>
-            <div class="option-wrapper">
-                <div class="explanation wrong-expl" id="expl-1-1">❌ Ні, це синтез РНК на матриці ДНК.</div>
-                <button class="option-btn" id="btn-1-1" onclick="toggleAnswer('1-1', false, 1)">Транскрипція</button>
-            </div>
-            <div class="option-wrapper">
-                <div class="explanation correct-expl" id="expl-1-2">✅ Правильно! Це сплайсинг.</div>
-                <button class="option-btn" id="btn-1-2" onclick="toggleAnswer('1-2', true, 1)">Сплайсинг</button>
-            </div>
-        </div>
-
-        <div class="card-box">
-            <p><b>2. При СЧВ виявлено антитіла до snRNP. Який процес постраждає?</b></p>
-            <div class="option-wrapper">
-                <div class="explanation correct-expl" id="expl-2-1">✅ Так! snRNP — це компоненти сплайсосом.</div>
-                <button class="option-btn" id="btn-2-1" onclick="toggleAnswer('2-1', true, 2)">Сплайсинг пре-мРНК</button>
-            </div>
-            <div class="option-wrapper">
-                <div class="explanation wrong-expl" id="expl-2-2">❌ Це процес подвоєння ДНК, snRNP там ні до чого.</div>
-                <button class="option-btn" id="btn-2-2" onclick="toggleAnswer('2-2', false, 2)">Реплікація</button>
-            </div>
-        </div>
-
-        <div class="card-box">
-            <p><b>3. Які ділянки гена кодують послідовність амінокислот у білку?</b></p>
-            <div class="option-wrapper">
-                <div class="explanation wrong-expl" id="expl-3-1">❌ Інтрони — це "вставки", вони вирізаються.</div>
-                <button class="option-btn" id="btn-3-1" onclick="toggleAnswer('3-1', false, 3)">Інтрони</button>
-            </div>
-            <div class="option-wrapper">
-                <div class="explanation correct-expl" id="expl-3-2">✅ Екзони — це саме ті частини, що "виражаються" (express).</div>
-                <button class="option-btn" id="btn-3-2" onclick="toggleAnswer('3-2', true, 3)">Екзони</button>
-            </div>
-        </div>
-
-        </div>
-
-    <button id="finish-btn" class="finish-btn" onclick="finishLesson()">Завершити урок ✅</button>
 
     <script>
         Telegram.WebApp.expand();
-        let solvedQuestions = new Set();
-        const totalQuestions = 3; // Зміни на 10, коли додаси всі 10 блоків питань
+        let solved = new Set();
+        const total = 1; // Зміни на кількість питань, які додаси
 
         function toggleAnswer(id, isCorrect, qNum) {
-            let explBox = document.getElementById('expl-' + id);
+            let expl = document.getElementById('expl-' + id);
             let btn = document.getElementById('btn-' + id);
-
-            if (explBox.style.display === 'block') {
-                explBox.style.display = 'none';
+            
+            if (expl.style.display === 'block') {
+                expl.style.display = 'none';
                 btn.style.backgroundColor = 'var(--tg-theme-button-color, #3390ec)';
                 return;
             }
 
             document.querySelectorAll(`[id^="expl-${qNum}-"]`).forEach(el => el.style.display = 'none');
             document.querySelectorAll(`[id^="btn-${qNum}-"]`).forEach(el => el.style.backgroundColor = 'var(--tg-theme-button-color, #3390ec)');
-
-            explBox.style.display = 'block';
+            
+            expl.style.display = 'block';
             if (isCorrect) {
                 btn.style.backgroundColor = '#4caf50';
-                solvedQuestions.add(qNum);
+                solved.add(qNum);
             } else {
                 btn.style.backgroundColor = '#f44336';
             }
 
-            if (solvedQuestions.size === totalQuestions) {
+            if (solved.size === total) {
                 document.getElementById('finish-btn').style.display = 'block';
             }
         }
