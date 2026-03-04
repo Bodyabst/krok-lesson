@@ -3,44 +3,79 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Плеєр для лекції</title>
-
+    <title>Урок: Кардіологія</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
-
     <style>
-        /* Базові стилі під кольори теми Telegram студента */
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background-color: var(--tg-theme-bg-color, #f4f4f5);
             color: var(--tg-theme-text-color, #000000);
             margin: 0;
             padding: 16px;
+            line-height: 1.5;
         }
-
-        h2 {
-            margin-top: 0;
-            font-size: 22px;
-        }
-
-        /* МАГІЯ ПЛЕЄРА: Контейнер, який робить відео адаптивним */
+        /* Плеєр */
         .video-container {
             position: relative;
-            padding-bottom: 56.25%; /* Це пропорція 16:9 */
+            padding-bottom: 56.25%;
             height: 0;
+            border-radius: 12px;
             overflow: hidden;
-            border-radius: 12px; /* Стильні закруглені кути */
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1); /* Легка тінь */
-            background-color: #000; /* Чорний фон, поки відео вантажиться */
+            margin-bottom: 20px;
         }
-
-        /* Саме відео розтягується на весь контейнер */
         .video-container iframe {
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
             border: none;
+        }
+        /* Блоки для тексту і тестів */
+        .card-box {
+            background-color: var(--tg-theme-secondary-bg-color, #ffffff);
+            padding: 16px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        /* Кнопки відповідей */
+        .option-btn {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 10px;
+            background-color: var(--tg-theme-button-color, #3390ec);
+            color: var(--tg-theme-button-text-color, #ffffff);
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            text-align: left;
+        }
+        .option-btn:disabled { opacity: 0.8; cursor: not-allowed; }
+        .correct { background-color: #4caf50 !important; }
+        .wrong { background-color: #f44336 !important; }
+        
+        /* Блок пояснення */
+        .explanation {
+            display: none;
+            margin-top: 15px;
+            padding: 12px;
+            border-left: 4px solid #3390ec;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        /* Фінальна кнопка (спочатку схована) */
+        .finish-btn {
+            display: none; 
+            width: 100%;
+            padding: 15px;
+            background-color: #4caf50;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
         }
     </style>
 </head>
@@ -49,14 +84,73 @@
     <h2>Крок 1: Кардіологія 🫀</h2>
 
     <div class="video-container">
-        <iframe width="560" height="315" src="https://www.youtube.com/embed/Ny3uzxYABUg?si=KtC8EAUcqrYvZYIr" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+        <iframe src="https://www.youtube.com/embed/Ny3uzxYABUg?si=KtC8EAUcqrYvZYIr" allowfullscreen></iframe>
     </div>
 
-    <script>
-        // Команда для Telegram: розгорнути вікно на максимум
-        let tg = window.Telegram.WebApp;
-        tg.expand();
-    </script>
+    <div class="card-box">
+        <h3 style="margin-top: 0;">📌 High-Yield:</h3>
+        <ul style="padding-left: 20px; margin-bottom: 0;">
+            <li><b>Інфаркт міокарда:</b> найчастіше вражає передню стінку лівого шлуночка (ПМШГ).</li>
+            <li><b>ЕКГ ознаки:</b> елевація сегмента ST (гостра стадія), патологічний зубець Q.</li>
+            <li><b>Маркери крові:</b> Тропонін I та T — 'золотий стандарт' діагностики.</li>
+        </ul>
+    </div>
 
+    <div class="card-box">
+        <h3 style="margin-top: 0;">🧠 Bites: Перевірка</h3>
+        <p>Який маркер некрозу міокарда є найбільш специфічним і залишається підвищеним найдовше (до 10-14 днів) після гострого інфаркту?</p>
+        
+        <div>
+            <button class="option-btn" onclick="checkAnswer(this, false)">АСТ</button>
+            <button class="option-btn" onclick="checkAnswer(this, true)">Тропонін I</button>
+            <button class="option-btn" onclick="checkAnswer(this, false)">КФК-МВ</button>
+            <button class="option-btn" onclick="checkAnswer(this, false)">Міоглобін</button>
+        </div>
+
+        <div id="explanation" class="explanation"></div>
+    </div>
+
+    <button id="finish-btn" class="finish-btn" onclick="finishLesson()">Завершити урок та закрити</button>
+
+    <script>
+        Telegram.WebApp.expand();
+
+        function checkAnswer(buttonElement, isCorrect) {
+            // 1. Блокуємо всі кнопки, щоб учень не клацав двічі
+            let allButtons = document.querySelectorAll('.option-btn');
+            allButtons.forEach(btn => btn.disabled = true);
+
+            // 2. Знаходимо блок пояснення
+            let explBox = document.getElementById('explanation');
+            explBox.style.display = 'block';
+
+            if (isCorrect) {
+                // Якщо правильно
+                buttonElement.classList.add('correct');
+                explBox.style.borderLeftColor = "#4caf50";
+                explBox.style.backgroundColor = "#e8f5e9";
+                explBox.style.color = "#2e7d32";
+                explBox.innerHTML = "✅ <b>Правильно! Це Тропонін I.</b><br><br><b>Пояснення:</b> Тропоніни високоспецифічні для серцевого м'яза і зберігаються в крові до 2 тижнів. <i>КФК-МВ</i> повертається до норми через 2-3 дні, тому її краще використовувати для діагностики <b>повторного</b> інфаркту.";
+            } else {
+                // Якщо неправильно
+                buttonElement.classList.add('wrong');
+                explBox.style.borderLeftColor = "#f44336";
+                explBox.style.backgroundColor = "#ffebee";
+                explBox.style.color = "#c62828";
+                explBox.innerHTML = "❌ <b>Не зовсім.</b><br><br><i>Міоглобін</i> зростає найпершим, але він не специфічний. <i>КФК-МВ</i> швидко падає. А от 'золотим стандартом', який тримається довго, є Тропонін.";
+                
+                // Підсвічуємо правильну відповідь (вона друга в списку, індекс 1)
+                allButtons[1].classList.add('correct'); 
+            }
+
+            // 3. Показуємо кнопку завершення уроку
+            document.getElementById('finish-btn').style.display = 'block';
+        }
+
+        function finishLesson() {
+            Telegram.WebApp.sendData("lesson_done");
+            Telegram.WebApp.close();
+        }
+    </script>
 </body>
 </html>
