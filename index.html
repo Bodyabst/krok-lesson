@@ -2,100 +2,130 @@
 <html lang="uk">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Урок: Процесинг РНК</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
+        /* Обнуляємо всі відступи, щоб відео було на весь екран */
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background-color: var(--tg-theme-bg-color, #f4f4f5);
             color: var(--tg-theme-text-color, #000000);
-            margin: 0; padding: 16px; display: flex; flex-direction: column; align-items: center;
+            margin: 0;
+            padding: 0; /* Прибрали падінг тут */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
-        .content-wrapper { width: 100%; max-width: 600px; }
-        
-        /* Контейнер для відео від Bunny */
-        .video-outer-container {
-            border-radius: 12px; overflow: hidden; margin-bottom: 20px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2); background-color: #000;
+
+        .content-wrapper {
+            width: 100%;
+            max-width: 600px;
+        }
+
+        /* Відео на всю ширину без відступів */
+        .video-container {
+            width: 100%;
+            position: relative;
+            padding-top: 56.25%; /* Співвідношення 16:9 */
+            background-color: #000;
+        }
+
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: 0;
+        }
+
+        /* Контент нижче відео повертаємо з відступами */
+        .padding-container {
+            padding: 16px;
         }
 
         .card-box {
             background-color: var(--tg-theme-secondary-bg-color, #ffffff);
-            padding: 16px; border-radius: 12px; margin-bottom: 20px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05); width: 100%; box-sizing: border-box;
+            padding: 16px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            box-sizing: border-box;
         }
-        
+
         table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 14px; }
         th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
         th { background-color: rgba(51, 144, 236, 0.1); }
 
-        .option-wrapper { margin-bottom: 10px; width: 100%; }
         .option-btn {
-            display: block; width: 100%; padding: 14px;
+            display: block; width: 100%; padding: 14px; margin-bottom: 10px;
             background-color: var(--tg-theme-button-color, #3390ec);
             color: var(--tg-theme-button-text-color, #ffffff);
-            border: none; border-radius: 8px; font-size: 15px;
+            border: none; border-radius: 8px; font-size: 16px;
             cursor: pointer; text-align: left; font-weight: 500;
         }
-        .explanation { display: none; margin-bottom: 8px; padding: 12px; border-radius: 6px; font-size: 14px; }
+
+        .explanation { display: none; margin-bottom: 12px; padding: 12px; border-radius: 8px; font-size: 14px; }
         .wrong-expl { background-color: #ffebee; color: #c62828; border-left: 4px solid #f44336; }
         .correct-expl { background-color: #e8f5e9; color: #2e7d32; border-left: 4px solid #4caf50; }
 
         .finish-btn {
             display: none; width: 100%; padding: 18px;
             background-color: #4caf50; color: white; border: none;
-            border-radius: 8px; font-size: 16px; font-weight: bold; margin-top: 10px;
+            border-radius: 8px; font-size: 16px; font-weight: bold;
         }
     </style>
 </head>
 <body>
     <div class="content-wrapper">
-        <h2>🧬 Процесинг РНК</h2>
-
-        <div class="video-outer-container">
-            <div style="position:relative;padding-top:56.25%;">
-                <iframe src="https://iframe.mediadelivery.net/embed/611262/acdb6b3f-0d4e-4253-8806-f3c2a2417eae?autoplay=false&loop=false&muted=false&preload=true&responsive=true" 
-                        loading="lazy" 
-                        style="border:0;position:absolute;top:0;height:100%;width:100%;" 
-                        allow="accelerometer;gyroscope;autoplay;encrypted-media;picture-in-picture;" 
-                        allowfullscreen="true">
-                </iframe>
-            </div>
+        
+        <div class="video-container">
+            <iframe src="https://iframe.mediadelivery.net/embed/611262/acdb6b3f-0d4e-4253-8806-f3c2a2417eae?autoplay=false&preload=true&responsive=true" 
+                    allow="accelerometer;gyroscope;autoplay;encrypted-media;picture-in-picture;" 
+                    allowfullscreen="true">
+            </iframe>
         </div>
 
-        <div class="card-box">
-            <h3 style="margin-top: 0;">📌 High-Yield Конспект</h3>
-            <p>Процесинг (дозрівання) мРНК відбувається в <b>ядрі</b>.</p>
-            <table>
-                <tr><th>Процес</th><th>Локалізація</th></tr>
-                <tr><td>Кепування</td><td>5'-кінець</td></tr>
-                <tr><td>Сплайсинг</td><td>Вирізання інтронів</td></tr>
-                <tr><td>Полі-А</td><td>3'-кінець</td></tr>
-            </table>
-        </div>
+        <div class="padding-container">
+            <h2>🧬 Процесинг РНК</h2>
 
-        <div id="quiz-container">
             <div class="card-box">
-                <p><b>1. Який процес передбачає видалення інтронів та зшивання екзонів?</b></p>
-                <div class="option-wrapper">
-                    <div class="explanation wrong-expl" id="expl-1-1">❌ Ні, це синтез РНК на матриці ДНК.</div>
+                <h3 style="margin-top: 0;">📌 High-Yield Конспект</h3>
+                <p>Процесинг (дозрівання) мРНК відбувається в <b>ядрі</b>.</p>
+                
+
+[Image of RNA processing mechanism]
+
+                <table>
+                    <tr><th>Процес</th><th>Опис</th></tr>
+                    <tr><td>Кепування</td><td>5'-кінець: 7-метилгуанозин.</td></tr>
+                    <tr><td>Сплайсинг</td><td>Вирізання інтронів.</td></tr>
+                    <tr><td>Полі-А</td><td>3'-кінець: Poly-A хвіст.</td></tr>
+                </table>
+            </div>
+
+            <div id="quiz-container">
+                <div class="card-box">
+                    <p><b>1. Який процес передбачає видалення інтронів?</b></p>
+                    <div id="expl-1-1" class="explanation wrong-expl">❌ Ні, це синтез РНК на матриці ДНК.</div>
                     <button class="option-btn" id="btn-1-1" onclick="toggleAnswer('1-1', false, 1)">Транскрипція</button>
-                </div>
-                <div class="option-wrapper">
-                    <div class="explanation correct-expl" id="expl-1-2">✅ Правильно! Сплайсинг робить РНК зрілою.</div>
+                    
+                    <div id="expl-1-2" class="explanation correct-expl">✅ Правильно! Сплайсинг вирізає інтрони.</div>
                     <button class="option-btn" id="btn-1-2" onclick="toggleAnswer('1-2', true, 1)">Сплайсинг</button>
                 </div>
             </div>
-            </div>
 
-        <button id="finish-btn" class="finish-btn" onclick="finishLesson()">Завершити урок ✅</button>
+            <button id="finish-btn" class="finish-btn" onclick="finishLesson()">Завершити урок ✅</button>
+        </div>
     </div>
 
     <script>
-        Telegram.WebApp.expand();
+        let tg = window.Telegram.WebApp;
+        tg.expand();
+
         let solved = new Set();
-        const total = 1; // Зміни на кількість питань, які додаси
+        const total = 1;
 
         function toggleAnswer(id, isCorrect, qNum) {
             let expl = document.getElementById('expl-' + id);
@@ -124,8 +154,8 @@
         }
 
         function finishLesson() {
-            Telegram.WebApp.sendData("lesson_done");
-            Telegram.WebApp.close();
+            tg.sendData("lesson_done");
+            tg.close();
         }
     </script>
 </body>
